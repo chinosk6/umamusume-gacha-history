@@ -1,0 +1,4 @@
+base58~=2.1.1
+Flask>=2.3.2
+pydantic~=1.8.2
+pycryptodome~=3.11.0
