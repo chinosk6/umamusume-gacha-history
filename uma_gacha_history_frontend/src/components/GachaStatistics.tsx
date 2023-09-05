@@ -112,38 +112,30 @@ const GachaStatistics: React.FC<{userData: UserData, languageType: LanguageTypes
 
     return (
         <div className="stat-div">
-            <div>
-                <input
-                    type="radio"
-                    id="ratioAll"
-                    name="fType"
-                    onClick={() => {setFType(FTypes.All)}}
-                    defaultChecked
-                />
-                <label htmlFor="ratioAll" className="label-for">{i18nText("All", languageType)}</label>
-                <input
-                    type="radio"
-                    id="ratioChara"
-                    name="fType"
-                    onClick={() => {setFType(FTypes.Chara)}}
-                />
-                <label htmlFor="ratioChara" className="label-for">{i18nText("Chara Only", languageType)}</label>
-                <input
-                    type="radio"
-                    id="ratioCard"
-                    name="fType"
-                    onClick={() => {setFType(FTypes.Card)}}
-                />
-                <label htmlFor="ratioCard" className="label-for">{i18nText("Card Only", languageType)}</label>
+            <div className="radio-inputs">
+                <label className="radio">
+                    <input type="radio" name="radioFilterType" onClick={() => {setFType(FTypes.All)}} defaultChecked/>
+                        <span className="name">{i18nText("All", languageType)}</span>
+                </label>
+                <label className="radio">
+                    <input type="radio" name="radioFilterType" onClick={() => {setFType(FTypes.Chara)}}/>
+                        <span className="name">{i18nText("Chara Only", languageType)}</span>
+                </label>
+
+                <label className="radio">
+                    <input type="radio" name="radioFilterType" onClick={() => {setFType(FTypes.Card)}}/>
+                        <span className="name">{i18nText("Card Only", languageType)}</span>
+                </label>
             </div>
-            <div>
+
+            <div style={{width: "30%", height: "40px", display: "flex", flexDirection: "row", alignItems: "center"}}>
                 <label htmlFor="countLimitInput" className="label-for">{i18nText("Gacha Count Limit", languageType)}</label>
-                <input id="countLimitInput" type="number" value={countLimit} onChange={onCountLimitChange} />
+                <input id="countLimitInput" type="number" className="searchbar" value={countLimit} onChange={onCountLimitChange} />
             </div>
             <div className="stat-info-div">
                 <div>
                     <p>{i18nText("Total Gacha Count", languageType)}: {totalGachaCount}</p>
-                    <p>{i18nText("SSR/3☆ Rate", languageType)}: {getRarityDataPercentage(0)}</p>
+                    <p>{i18nText("SSR/3☆ Rate", languageType)}: {getRarityDataPercentage(2)}</p>
                     <p>{i18nText("Continuous No SSR/3☆ Count", languageType)}: {continuousNoDesiredCount}</p>
                     <p>{i18nText("Lucky Ranking (Total)", languageType)}: {userData.rank}/{userData.total_users}</p>
                 </div>

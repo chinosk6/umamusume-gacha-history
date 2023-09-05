@@ -94,14 +94,44 @@ const Gacha: React.FC = () => {
     return (
         <div>
             <div className="result-div">
-                <input type="text" value={userId} onChange={handleInputChange} placeholder={i18nText("Enter User ID", languageType)} />
-                <button onClick={() => handleSubmit()}>{i18nText("Submit", languageType)}</button>
-                <div>
-                    <label>Language</label>
-                    <select onChange={(event) => {setLanguageType(parseInt(event.target.value))}} value={languageType}>
-                        <option value={LanguageTypes.English}>{i18nText("English", languageType)}</option>
-                        <option value={LanguageTypes.SChinese}>{i18nText("SChinese", languageType)}</option>
-                    </select>
+                <div className="config-div">
+                    <div>
+                        <div className="searchbar">
+                            <div className="searchbar-wrapper">
+                                <div className="searchbar-left">
+                                    <div className="search-icon-wrapper">
+                                        <span className="search-icon searchbar-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                <path
+                                                    d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z">
+                                                </path>
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="searchbar-center">
+                                    <div className="searchbar-input-spacer"></div>
+                                    <input type="text" className="searchbar-input" maxLength={2048}
+                                           autoCapitalize="off" role="combobox"
+                                           placeholder={i18nText("Enter User ID", languageType)}
+                                           value={userId} onChange={handleInputChange}/>
+                                </div>
+
+                                <div className="searchbar-right">
+                                    <img src="umai.png" alt="search" className="start-search" role="button" onClick={() => handleSubmit()}/>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div>
+                        <label className="label-for">Language</label>
+                        <select onChange={(event) => {setLanguageType(parseInt(event.target.value))}} value={languageType} className="select">
+                            <option value={LanguageTypes.English}>{i18nText("English", languageType)}</option>
+                            <option value={LanguageTypes.SChinese}>{i18nText("SChinese", languageType)}</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div className="result-div">
@@ -112,20 +142,21 @@ const Gacha: React.FC = () => {
                         <GachaStatistics userData={userData} languageType={languageType} />
                         <hr/>
                         <h1>{i18nText("Gacha History", languageType)}</h1>
-                        <div className="tabs">
-                            <div
-                                className={`tab ${activeTab === GachaTypes.SupportCard ? 'active' : ''}`}
-                                onClick={() => handleTabClick(GachaTypes.SupportCard)}
-                            >
-                                {i18nText("Support Card", languageType)}
-                            </div>
-                            <div
-                                className={`tab ${activeTab === GachaTypes.Chara ? 'active' : ''}`}
-                                onClick={() => handleTabClick(GachaTypes.Chara)}
-                            >
-                                {i18nText("Character", languageType)}
+
+                        <div style={{display: "flex", justifyContent: "center"}}>
+                            <div className="radio-inputs">
+                                <label className="radio">
+                                    <input type="radio" name="radioGachaType" onClick={() => handleTabClick(GachaTypes.SupportCard)} defaultChecked/>
+                                    <span className="name">{i18nText("Support Card", languageType)}</span>
+                                </label>
+                                <label className="radio">
+                                    <input type="radio" name="radioGachaType" onClick={() => handleTabClick(GachaTypes.Chara)}/>
+                                    <span className="name">{i18nText("Character", languageType)}</span>
+                                </label>
                             </div>
                         </div>
+
+
                         {activeTab === GachaTypes.SupportCard && (
                             <CardList cards={userData.data_cards} gachaType={GachaTypes.SupportCard} languageType={languageType} />
                         )}
