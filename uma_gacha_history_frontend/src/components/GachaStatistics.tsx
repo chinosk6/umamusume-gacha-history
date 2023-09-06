@@ -128,7 +128,7 @@ const GachaStatistics: React.FC<{userData: UserData, languageType: LanguageTypes
                 </label>
             </div>
 
-            <div style={{width: "30%", height: "40px", display: "flex", flexDirection: "row", alignItems: "center"}}>
+            <div style={{height: "40px", display: "flex", flexDirection: "row", alignItems: "center"}}>
                 <label htmlFor="countLimitInput" className="label-for">{i18nText("Gacha Count Limit", languageType)}</label>
                 <input id="countLimitInput" type="number" className="searchbar" value={countLimit} onChange={onCountLimitChange} />
             </div>

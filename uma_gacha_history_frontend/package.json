@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^1.5.0",
     "chart.js": "^4.4.0",
+    "js-cookie": "^3.0.5",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0"

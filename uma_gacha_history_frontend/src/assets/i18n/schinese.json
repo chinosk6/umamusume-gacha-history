@@ -14,5 +14,9 @@
     "Character": "角色",
     "Card Gacha History": "支援卡抽奖历史记录",
     "Chara Gacha History": "角色抽奖历史记录",
-    "SChinese": "简体中文"
+    "SChinese": "简体中文",
+    "Search User Failed": "搜索用户失败",
+    "User Not Found": "未找到该用户",
+    "Umamusume Gacha History": "赛马娘抽卡记录",
+    "_description": "使用说明\n此功能需要搭配 Trainers' Legend G 插件使用\n在插件设置中，打开 \"上传抽卡记录 (uploadGachaHistory)\" 功能\n在游戏抽卡页面点击 \"抽卡记录\" 按钮即可同步数据。\n您可以在控制台看到您的用户ID。"
 }

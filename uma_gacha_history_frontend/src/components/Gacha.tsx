@@ -1,12 +1,19 @@
-import React, {useEffect, useState} from 'react';
-import axios from 'axios';
+import React, {useEffect, useState, useRef} from 'react';
+import axios, {AxiosError} from 'axios';
 import {Card, GachaTypes, UserData} from "./models/GachaResponse";
 import GachaStatistics from "./GachaStatistics";
 import {i18nText, LanguageTypes} from "../i18n/i18n";
+import Cookies from "js-cookie";
+import SearchBar from "./subPages/SearchBar";
+import PageEndEvent from "./subPages/PageEndEvent";
+import Bandage from "./subPages/Bandage";
+import PopUpWindow from "./subPages/PopUpWindow";
 
 
-const CardList: React.FC<{ cards: Card[], gachaType: GachaTypes, languageType: LanguageTypes }> = ({ cards, gachaType, languageType }) => {
+const CardList: React.FC<{ cards: Card[], gachaType: GachaTypes, languageType: LanguageTypes, showCount: number }> = ({ cards, gachaType, languageType, showCount }) => {
     const [expanded, setExpanded] = useState<boolean>(true);
+
+    const i18nT = (id: string) => i18nText(id, languageType);
 
     const handleExpand = () => {
         setExpanded(!expanded);
@@ -15,10 +22,10 @@ const CardList: React.FC<{ cards: Card[], gachaType: GachaTypes, languageType: L
     const getSrcPath = (gachaType: GachaTypes, result: number, rarity: number) => {
         let resultStr = result.toString()
         if (gachaType === GachaTypes.Chara) {
-            return `img/charas/chr_icon_${resultStr.substring(0, 4)}_${resultStr}_${ rarity < 3 ? "01" : "02"}.png`
+            return `img/charas/chr_icon_${resultStr.substring(0, 4)}_${resultStr}_${ rarity < 3 ? "01" : "02"}.jpg`
         }
         else if (gachaType === GachaTypes.SupportCard) {
-            return `img/cards/support_card_s_${resultStr}.png`
+            return `img/cards/support_card_s_${resultStr}.jpg`
         }
         return ""
     }
@@ -26,10 +33,10 @@ const CardList: React.FC<{ cards: Card[], gachaType: GachaTypes, languageType: L
     return (
         <div>
             {/*onClick={handleExpand}*/}
-            <h2>{gachaType === GachaTypes.Chara ? i18nText("Chara Gacha History", languageType) : i18nText("Card Gacha History", languageType)}</h2>
+            <h2>{gachaType === GachaTypes.Chara ? i18nT("Chara Gacha History") : i18nT("Card Gacha History")}</h2>
             {expanded && (
                 <ol className="card-ol">
-                    {cards.map((card, index) => (
+                    {cards.slice(0, showCount).map((card, index) => (
                         <li className="card-il" key={index}>
                             {/*<div>
                                 <div>Cost Count: {card.cost_count}</div>
@@ -50,11 +57,25 @@ const CardList: React.FC<{ cards: Card[], gachaType: GachaTypes, languageType: L
     );
 };
 
+const shouCountAdd = 5;
+let currentShouCount = 5;
+
 const Gacha: React.FC = () => {
     const [userData, setUserData] = useState<UserData | null>(null);
     const [userId, setUserId] = useState<string>('');
     const [activeTab, setActiveTab] = useState<GachaTypes>(GachaTypes.SupportCard);
-    const [languageType, setLanguageType] = useState<LanguageTypes>(LanguageTypes.SChinese);
+    const [languageType, setLanguageType] = useState(LanguageTypes.SChinese);
+    const [searchTip, setSearchTip] = useState("");
+    const [showCount, setShowCount] = useState<number>(shouCountAdd);
+    const [popUpText, setPopUpText] = useState("");
+    const [popUpDisplay, setPopUpDisplay] = useState(false);
+
+    const i18nT = (id: string) => i18nText(id, languageType);
+
+    const onLanguageTypeChanged = (value: number) => {
+        setLanguageType(value);
+        Cookies.set("userSetLang", value.toString());
+    }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUserId(e.target.value);
@@ -76,60 +97,103 @@ const Gacha: React.FC = () => {
             setUserId(uid);
             handleSubmit(uid);
         }
+        else {
+            const cookieCache = Cookies.get("lastQueryUID");
+            if (cookieCache) {
+                setUserId(cookieCache);
+            }
+        }
+        const userLang = Cookies.get("userSetLang");
+        if (userLang) {
+            setLanguageType(parseInt(userLang));
+        }
     }, []);
 
     const fetchData = async (uid: string | null = null) => {
         try {
-            const response = await axios.get(`https://uma.gacha.chinosk6.cn/api/get/usergacha?query_id=${uid === null ? userId : uid}`);
+            const searchUID = uid === null ? userId : uid;
+            const response = await axios.get(`https://uma.gacha.chinosk6.cn/api/get/usergacha?query_id=${searchUID}`);
             setUserData(response.data);
-        } catch (error) {
-            console.error(error);
+            setSearchTip("");
+            if (response.status == 200) {
+                Cookies.set("lastQueryUID", searchUID);
+            }
+        }
+        catch (error) {
+            if (error instanceof AxiosError) {
+                switch (error.response.status) {
+                    case 404:
+                        setSearchTip(`${i18nT("Search User Failed")}: ${i18nT("User Not Found")}.`); break;
+                    default:
+                        setSearchTip(`${i18nT("Search User Failed")}: ${error.response.status}`);
+                }
+            } else {
+                console.error("fetchDataError", error);
+            }
         }
     };
 
     const handleTabClick = (tab: GachaTypes) => {
-        setActiveTab(tab);
+        if (tab != activeTab) {
+            setActiveTab(tab);
+            currentShouCount = shouCountAdd;
+            setShowCount(currentShouCount);
+        }
     };
+
+    let lastEndTime = new Date().getTime();
+    const onPageEnd = () => {
+        let currentEndTime = new Date().getTime();
+        if (currentEndTime - lastEndTime > 100) {
+            lastEndTime = currentEndTime;
+            currentShouCount += shouCountAdd;
+            setShowCount(currentShouCount);
+        }
+    };
+
+    const popUp = (text: string) => {
+        setPopUpText(text);
+        setPopUpDisplay(true);
+    }
 
     return (
         <div>
+            <PopUpWindow text={popUpText} display={popUpDisplay} setDisplay={setPopUpDisplay}/>
             <div className="result-div">
                 <div className="config-div">
-                    <div>
-                        <div className="searchbar">
-                            <div className="searchbar-wrapper">
-                                <div className="searchbar-left">
-                                    <div className="search-icon-wrapper">
-                                        <span className="search-icon searchbar-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                <path
-                                                    d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z">
-                                                </path>
-                                            </svg>
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="searchbar-center">
-                                    <div className="searchbar-input-spacer"></div>
-                                    <input type="text" className="searchbar-input" maxLength={2048}
-                                           autoCapitalize="off" role="combobox"
-                                           placeholder={i18nText("Enter User ID", languageType)}
-                                           value={userId} onChange={handleInputChange}/>
-                                </div>
-
-                                <div className="searchbar-right">
-                                    <img src="umai.png" alt="search" className="start-search" role="button" onClick={() => handleSubmit()}/>
-                                </div>
-                            </div>
+                    <div className="title-div">
+                        <h1>{i18nT("Umamusume Gacha History")}</h1>
+                        <div style={{display: "flex", height: "100%", flexDirection: "column"}}>
+                            <a href="#" onClick={() => popUp(i18nT("_description"))}>(?)</a>
                         </div>
-
+                    </div>
+                    <div className="repo-div">
+                        <a href="https://github.com/chinosk6/umamusume-gacha-history" className="bandage-a" target="_blank">
+                            <Bandage leftText={"Github"} rightText={"This Repo"} leftColor={"#414141"} rightColor={"#007ec6"}/>
+                        </a>
+                        <a href="https://github.com/MinamiChiwa/Trainers-Legend-G" className="bandage-a" target="_blank">
+                            <Bandage leftText={"Github"} rightText={"Trainers' Legend G"} leftColor={"#414141"} rightColor={"#007ec6"}/>
+                        </a>
                     </div>
                     <div>
+                        <SearchBar inputValue={userId} placeHolder={i18nT("Enter User ID")}
+                                   onInputChange={handleInputChange} onSubmit={() => handleSubmit()} />
+                    </div>
+                    <div style={{display: searchTip ? "" : "none"}}>
+                        <p style={{color: "red"}}>{searchTip}</p>
+                    </div>
+                    <div style={{marginTop: "8px"}}>
                         <label className="label-for">Language</label>
-                        <select onChange={(event) => {setLanguageType(parseInt(event.target.value))}} value={languageType} className="select">
-                            <option value={LanguageTypes.English}>{i18nText("English", languageType)}</option>
-                            <option value={LanguageTypes.SChinese}>{i18nText("SChinese", languageType)}</option>
+                        <select onChange={(event) => onLanguageTypeChanged(parseInt(event.target.value))} value={languageType} className="select">
+                            {
+                                Object.keys(LanguageTypes).filter((value, index, arr) =>
+                                    !value.match(/^\d+$/)
+                                ).map((r, i) => {
+                                    return (
+                                        <option value={LanguageTypes[r]} key={i}>{i18nT(r)}</option>
+                                    )
+                                })
+                            }
                         </select>
                     </div>
                 </div>
@@ -141,31 +205,34 @@ const Gacha: React.FC = () => {
                         <hr/>
                         <GachaStatistics userData={userData} languageType={languageType} />
                         <hr/>
-                        <h1>{i18nText("Gacha History", languageType)}</h1>
+                        <h1>{i18nT("Gacha History")}</h1>
 
                         <div style={{display: "flex", justifyContent: "center"}}>
                             <div className="radio-inputs">
                                 <label className="radio">
                                     <input type="radio" name="radioGachaType" onClick={() => handleTabClick(GachaTypes.SupportCard)} defaultChecked/>
-                                    <span className="name">{i18nText("Support Card", languageType)}</span>
+                                    <span className="name">{i18nT("Support Card")}</span>
                                 </label>
                                 <label className="radio">
                                     <input type="radio" name="radioGachaType" onClick={() => handleTabClick(GachaTypes.Chara)}/>
-                                    <span className="name">{i18nText("Character", languageType)}</span>
+                                    <span className="name">{i18nT("Character")}</span>
                                 </label>
                             </div>
                         </div>
 
 
                         {activeTab === GachaTypes.SupportCard && (
-                            <CardList cards={userData.data_cards} gachaType={GachaTypes.SupportCard} languageType={languageType} />
+                            <CardList cards={userData.data_cards} gachaType={GachaTypes.SupportCard}
+                                      languageType={languageType} showCount={showCount} />
                         )}
                         {activeTab === GachaTypes.Chara && (
-                            <CardList cards={userData.data_chara} gachaType={GachaTypes.Chara} languageType={languageType} />
+                            <CardList cards={userData.data_chara} gachaType={GachaTypes.Chara}
+                                      languageType={languageType} showCount={showCount} />
                         )}
                     </div>
                 )}
             </div>
+            <PageEndEvent onPageEnd={onPageEnd}/>
         </div>
     );
 };
