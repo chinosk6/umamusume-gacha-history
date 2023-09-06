@@ -1,6 +1,8 @@
 import React from "react";
 
-const SearchBar: React.FC<{inputValue: string, placeHolder: string, onInputChange, onSubmit}> = ({inputValue, placeHolder, onInputChange, onSubmit}) => {
+type callbackFun = (...v: any) => void;
+
+const SearchBar: React.FC<{inputValue: string, placeHolder: string, onInputChange: callbackFun, onSubmit: callbackFun}> = ({inputValue, placeHolder, onInputChange, onSubmit}) => {
     return (
         <div className="searchbar">
             <div className="searchbar-wrapper">

@@ -121,11 +121,11 @@ const Gacha: React.FC = () => {
         }
         catch (error) {
             if (error instanceof AxiosError) {
-                switch (error.response.status) {
+                switch (error.response?.status) {
                     case 404:
                         setSearchTip(`${i18nT("Search User Failed")}: ${i18nT("User Not Found")}.`); break;
                     default:
-                        setSearchTip(`${i18nT("Search User Failed")}: ${error.response.status}`);
+                        setSearchTip(`${i18nT("Search User Failed")}: ${error.response?.status}`);
                 }
             } else {
                 console.error("fetchDataError", error);
@@ -169,10 +169,12 @@ const Gacha: React.FC = () => {
                     </div>
                     <div className="repo-div">
                         <a href="https://github.com/chinosk6/umamusume-gacha-history" className="bandage-a" target="_blank">
-                            <Bandage leftText={"Github"} rightText={"This Repo"} leftColor={"#414141"} rightColor={"#007ec6"}/>
+                            <Bandage leftText={"Github"} rightText={"This Repo"} leftColor={"#414141"}
+                                     rightColor={"#007ec6"} leftTextColor={"#fff"} rightTextColor={"#fff"}/>
                         </a>
                         <a href="https://github.com/MinamiChiwa/Trainers-Legend-G" className="bandage-a" target="_blank">
-                            <Bandage leftText={"Github"} rightText={"Trainers' Legend G"} leftColor={"#414141"} rightColor={"#007ec6"}/>
+                            <Bandage leftText={"Github"} rightText={"Trainers' Legend G"} leftColor={"#414141"}
+                                     rightColor={"#007ec6"} leftTextColor={"#fff"} rightTextColor={"#fff"}/>
                         </a>
                     </div>
                     <div>
@@ -186,11 +188,11 @@ const Gacha: React.FC = () => {
                         <label className="label-for">Language</label>
                         <select onChange={(event) => onLanguageTypeChanged(parseInt(event.target.value))} value={languageType} className="select">
                             {
-                                Object.keys(LanguageTypes).filter((value, index, arr) =>
+                                Object.keys(LanguageTypes).filter((value) =>
                                     !value.match(/^\d+$/)
                                 ).map((r, i) => {
                                     return (
-                                        <option value={LanguageTypes[r]} key={i}>{i18nT(r)}</option>
+                                        <option value={LanguageTypes[r as keyof typeof LanguageTypes]} key={i}>{i18nT(r)}</option>
                                     )
                                 })
                             }

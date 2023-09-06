@@ -1,7 +1,8 @@
 import React from "react";
 
+type callbackFun = (v: boolean) => void;
 
-const PopUpWindow: React.FC<{text: string, display: boolean, setDisplay}> = ({text, display, setDisplay}) => {
+const PopUpWindow: React.FC<{text: string, display: boolean, setDisplay: callbackFun}> = ({text, display, setDisplay}) => {
     return (
         <div style={{display: display ? "" : "none"}} className="overlay" onClick={() => setDisplay(false)}>
             <div className="popup" onClick={(event => event.stopPropagation())}>
@@ -9,7 +10,7 @@ const PopUpWindow: React.FC<{text: string, display: boolean, setDisplay}> = ({te
                     <a onClick={() => setDisplay(false)}>x</a>
                 </div>
                 <div className="popup-inner" onClick={() => {}}>
-                    {text.split("\n").map((t, index, arr) => (
+                    {text.split("\n").map((t, index) => (
                         <p className="popup-p" key={index}>{t}</p>
                     ))}
                 </div>

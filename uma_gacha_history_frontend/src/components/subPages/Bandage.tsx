@@ -5,10 +5,10 @@ type callBack = () => void;
 interface BadgeProps {
     leftText: string;
     rightText: string;
-    leftColor?: string;
-    rightColor?: string;
-    leftTextColor?: string;
-    rightTextColor?: string;
+    leftColor: string;
+    rightColor: string;
+    leftTextColor: string;
+    rightTextColor: string;
     onClick?: callBack
 }
 
@@ -20,7 +20,7 @@ interface BadgeProps {
 // }
 const baseStyle = {}
 
-function getBandageStyle(background, color, isLeft: boolean) {
+function getBandageStyle(background: string, color: string, isLeft: boolean) {
     return isLeft ? Object.assign({}, baseStyle, {background: background,
                                                                  color: color,
                                                                  borderBottomLeftRadius: "5px",

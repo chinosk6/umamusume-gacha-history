@@ -12,7 +12,7 @@ export function i18nText(id: string, langId: LanguageTypes) {
             return schinese[id as keyof typeof schinese] || id;
         }
         case LanguageTypes.English:
-            return english[id as keyof typeof schinese] || id;
+            return english[id as keyof typeof english] || id;
         default: {
             return id;
         }
