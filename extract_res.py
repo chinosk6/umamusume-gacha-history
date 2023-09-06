@@ -17,9 +17,9 @@ def get_texture2d(file_path: str, name: Optional[str], save_name: str, resize=No
                 if (name is None) or (data.name.lower() == name.lower()):
                     img_data = data.read()
                     if resize:
-                        img_data.image.resize(resize).save(save_name)
+                        img_data.image.convert("RGB").resize(resize).save(save_name, quality=90)
                     else:
-                        img_data.image.save(save_name)
+                        img_data.image.convert("RGB").save(save_name, quality=90)
                     return True
     return False
 
@@ -54,7 +54,7 @@ def main():
     for n, i in enumerate(support_cards):
         name_full, bundle_hash = i[0], i[1]
         file_name = name_full.split("/")[-1]
-        is_s = get_texture2d(db.get_bundle_path_from_hash(bundle_hash), file_name, f"extracted_res/cards/{file_name}.png",
+        is_s = get_texture2d(db.get_bundle_path_from_hash(bundle_hash), file_name, f"extracted_res/cards/{file_name}.jpg",
                              resize=(64, 64))
         print(f"Card: {n + 1}/{total} {name_full} success: {is_s}")
         if not is_s:
@@ -65,7 +65,7 @@ def main():
     for n, i in enumerate(chara_icons):
         name_full, bundle_hash = i[0], i[1]
         file_name = name_full.split("/")[-1]
-        is_s = get_texture2d(db.get_bundle_path_from_hash(bundle_hash), file_name, f"extracted_res/charas/{file_name}.png",
+        is_s = get_texture2d(db.get_bundle_path_from_hash(bundle_hash), file_name, f"extracted_res/charas/{file_name}.jpg",
                              resize=(64, 64))
         print(f"Chara: {n + 1}/{total} {name_full} success: {is_s}")
         if not is_s:
