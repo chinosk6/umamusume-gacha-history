@@ -1,10 +1,7 @@
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 from base58 import b58encode, b58decode
-
-
-KEY = b"qmzlUDgYfWQxMo8rsXVGT3wS"[:16]
-IV = b"BY78Y7btFVTdxt32QZ42qDTY"[:16]
+from keys import *
 
 
 def aes_encrypt(key, iv, plaintext):

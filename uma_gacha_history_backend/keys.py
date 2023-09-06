@@ -1,0 +1,3 @@
+# AES KEY and IV
+KEY = b"qmzlUDgYfWQxMo8rsXVGT3wS"[:16]
+IV = b"BY78Y7btFVTdxt32QZ42qDTY"[:16]
