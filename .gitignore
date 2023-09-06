@@ -7,3 +7,4 @@ __pycache__
 /uma_gacha_history_backend/database/uma_gacha.db
 /uma_gacha_history_backend/test.py
 /extracted_res_png
+/uma_gacha_history_backend/keys.py
