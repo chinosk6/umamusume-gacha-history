@@ -1,20 +1,16 @@
-body {
-    background-color: #f8f8f8;
-    background-image: url("background.jpg");
-    background-attachment: fixed;
-}
-
 .card-results {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     justify-content: center;
     align-items: center;
+    margin-top: -8px;
 }
 
 .card-image {
-    width: 5em;
-    height: 5em;
+    width: 8%;
+    min-width: 3em;
+    height: auto
 }
 
 .card-ol {
@@ -22,14 +18,18 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    list-style-type: none;
+    padding-left: 0;
 }
 
 .card-il{
     border: 3px solid limegreen;
-    padding: 5px;
+    padding: 0 0 5px;
     border-radius: 8px;
     margin-bottom: 5px;
     width: 90%;
+    display: flex;
+    flex-direction: column;
 }
 
 .result-div {
@@ -326,4 +326,22 @@ body {
 .popup-p {
     text-align: center;
     margin: 10px;
+}
+
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    background-size: cover;
+    z-index: -1;
+}
+
+.triangle {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    width: 10%;
+    max-width: 3em;
 }

@@ -2,6 +2,7 @@
 export interface ResultInfo {
     id: number;
     rarity: number;
+    name?: string;
 }
 
 export interface Card {

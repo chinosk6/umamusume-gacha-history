@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useRef} from 'react';
 import axios, {AxiosError} from 'axios';
 import {Card, GachaTypes, UserData} from "./models/GachaResponse";
+import CardList from "./CardList";
 import GachaStatistics from "./GachaStatistics";
 import {i18nText, LanguageTypes} from "../i18n/i18n";
 import Cookies from "js-cookie";
@@ -8,54 +9,8 @@ import SearchBar from "./subPages/SearchBar";
 import PageEndEvent from "./subPages/PageEndEvent";
 import Bandage from "./subPages/Bandage";
 import PopUpWindow from "./subPages/PopUpWindow";
+import Background from "./Background";
 
-
-const CardList: React.FC<{ cards: Card[], gachaType: GachaTypes, languageType: LanguageTypes, showCount: number }> = ({ cards, gachaType, languageType, showCount }) => {
-    const [expanded, setExpanded] = useState<boolean>(true);
-
-    const i18nT = (id: string) => i18nText(id, languageType);
-
-    const handleExpand = () => {
-        setExpanded(!expanded);
-    };
-
-    const getSrcPath = (gachaType: GachaTypes, result: number, rarity: number) => {
-        let resultStr = result.toString()
-        if (gachaType === GachaTypes.Chara) {
-            return `img/charas/chr_icon_${resultStr.substring(0, 4)}_${resultStr}_${ rarity < 3 ? "01" : "02"}.jpg`
-        }
-        else if (gachaType === GachaTypes.SupportCard) {
-            return `img/cards/support_card_s_${resultStr}.jpg`
-        }
-        return ""
-    }
-
-    return (
-        <div>
-            {/*onClick={handleExpand}*/}
-            <h2>{gachaType === GachaTypes.Chara ? i18nT("Chara Gacha History") : i18nT("Card Gacha History")}</h2>
-            {expanded && (
-                <ol className="card-ol">
-                    {cards.slice(0, showCount).map((card, index) => (
-                        <li className="card-il" key={index}>
-                            {/*<div>
-                                <div>Cost Count: {card.cost_count}</div>
-                            </div>*/}
-                            <div className="card-results">
-                                {card.results.map((result, i) => (
-                                    <img key={i} src={ getSrcPath(gachaType, result.id, result.rarity) } alt={`Card ${result.id}`} className="card-image" />
-                                ))}
-                            </div>
-                            <div>
-                                <div>{card.create_time}</div>
-                            </div>
-                        </li>
-                    ))}
-                </ol>
-            )}
-        </div>
-    );
-};
 
 const shouCountAdd = 5;
 let currentShouCount = 5;
@@ -158,6 +113,9 @@ const Gacha: React.FC = () => {
 
     return (
         <div>
+            <div className="background">
+                <Background imgSrc={['bg/orange.png', 'bg/green.png', 'bg/blue.png']} speed={0.1}/>
+            </div>
             <PopUpWindow text={popUpText} display={popUpDisplay} setDisplay={setPopUpDisplay}/>
             <div className="result-div">
                 <div className="config-div">
