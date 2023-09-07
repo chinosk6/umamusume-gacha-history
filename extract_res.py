@@ -1,8 +1,13 @@
 import sqlite3
 from typing import Optional
 import UnityPy
+from PIL import Image
 import os
 
+def save_img(image: Image.Image, save_name: str):
+    pt = Image.new("RGB", image.size, (255, 255, 255))
+    pt.paste(image, (0, 0), mask=image)
+    pt.save(save_name, quality=90)
 
 def get_texture2d(file_path: str, name: Optional[str], save_name: str, resize=None):
     dir_name = os.path.dirname(save_name)
@@ -17,9 +22,9 @@ def get_texture2d(file_path: str, name: Optional[str], save_name: str, resize=No
                 if (name is None) or (data.name.lower() == name.lower()):
                     img_data = data.read()
                     if resize:
-                        img_data.image.convert("RGB").resize(resize).save(save_name, quality=90)
+                        save_img(img_data.image.resize(resize), save_name)
                     else:
-                        img_data.image.convert("RGB").save(save_name, quality=90)
+                        save_img(img_data.image, save_name)
                     return True
     return False
 
