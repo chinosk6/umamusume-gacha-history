@@ -119,12 +119,17 @@ class UserDb(umadb.UmaDb):
             if card_type == 1:
                 query = cursor.execute("SELECT default_rarity FROM card_data WHERE id=?", [card_id]).fetchone()
                 if query:
-                    return query[0]
+                    return query[0], None
             elif card_type == 2:
                 query = cursor.execute("SELECT rarity FROM support_card_data WHERE id=?", [card_id]).fetchone()
                 if query:
-                    return query[0]
-            return -233
+                    rarity = query[0]
+                    query = cursor.execute("SELECT text FROM text_data WHERE \"index\"=? AND id=75", [card_id]).fetchone()
+                    if query:
+                        return rarity, query[0]
+                    else:
+                        return rarity, None
+            return -233, None
         finally:
             cursor.close()
 

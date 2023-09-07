@@ -59,17 +59,17 @@ class GachaUserUploadHistory(BaseModel):
 
 
 class GachaExecHistoryArrayRetItem(GachaExecHistoryArrayItem):
-    results: t.List[t.Dict[str, int]]
+    results: t.List[t.Dict[str, t.Union[int, str, None]]]
 
-    def __init__(self, get_rarity_callback: t.Callable[[int, int], int], **data):
+    def __init__(self, get_rarity_callback: t.Callable[[int, int], t.Tuple[int, t.Optional[str]]], **data):
         results_str = data.get("card_results", "")
         results = []
         for i in results_str.split("|"):
             if i.isdigit():
                 card_id = int(i)
-                rarity = get_rarity_callback(card_id, data["gacha_card_type"])
+                rarity, name = get_rarity_callback(card_id, data["gacha_card_type"])
                 if rarity != -233:
-                    results.append({"id": card_id, "rarity": rarity})
+                    results.append({"id": card_id, "rarity": rarity, "name": name})
         data["results"] = results
         super().__init__(**data)
 
