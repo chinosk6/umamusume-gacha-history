@@ -1,0 +1,23 @@
+{
+    "Submit": "提交",
+    "Enter User ID": "輸入使用者ID",
+    "All": "全部",
+    "Chara Only": "僅角色池",
+    "Card Only": "僅支援卡池",
+    "Gacha Count Limit": "抽卡次數統計限制",
+    "Total Gacha Count": "總抽數",
+    "SSR/3☆ Rate": "SSR/3☆ 機率",
+    "Continuous No SSR/3☆ Count": "最多連續未出彩數",
+    "Lucky Ranking (Total)": "歐氣排行（總）",
+    "Gacha History": "抽卡記錄",
+    "Support Card": "支援卡",
+    "Character": "角色",
+    "Card Gacha History": "支援卡獎池歷史記錄",
+    "Chara Gacha History": "角色獎池歷史記錄",
+    "SChinese": "简体中文",
+    "TChinese": "繁體中文",
+    "Search User Failed": "搜索使用者失敗",
+    "User Not Found": "未找到該使用者",
+    "Umamusume Gacha History": "賽馬娘抽卡記錄",
+    "_description": "使用說明\n此功能需要搭配 Trainers' Legend G 插件使用\n在插件設置中，打開「上傳抽卡記錄 (uploadGachaHistory)」功能\n在遊戲抽卡頁面點擊「抽卡記錄」按鈕即可同步資料。\n您可以在控制台看到您的使用者ID。"
+}
