@@ -126,6 +126,10 @@ const Gacha: React.FC = () => {
                         </div>
                     </div>
                     <div className="repo-div">
+                        <a href="https://space.bilibili.com/287061163" className="bandage-a" target="_blank">
+                            <Bandage leftText={"Author"} rightText={"chinosk"} leftColor={"#414141"}
+                                     rightColor={"#00adeb"} leftTextColor={"#fff"} rightTextColor={"#fff"}/>
+                        </a>
                         <a href="https://github.com/chinosk6/umamusume-gacha-history" className="bandage-a" target="_blank">
                             <Bandage leftText={"Github"} rightText={"This Repo"} leftColor={"#414141"}
                                      rightColor={"#007ec6"} leftTextColor={"#fff"} rightTextColor={"#fff"}/>
