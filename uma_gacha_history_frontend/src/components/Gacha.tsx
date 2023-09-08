@@ -29,7 +29,9 @@ const Gacha: React.FC = () => {
 
     const onLanguageTypeChanged = (value: number) => {
         setLanguageType(value);
-        Cookies.set("userSetLang", value.toString());
+        const expiresDate = new Date();
+        expiresDate.setDate(expiresDate.getDate() + 365);
+        Cookies.set("userSetLang", value.toString(), { expires: expiresDate });
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +73,9 @@ const Gacha: React.FC = () => {
             setUserData(response.data);
             setSearchTip("");
             if (response.status == 200) {
-                Cookies.set("lastQueryUID", searchUID);
+                const expiresDate = new Date();
+                expiresDate.setDate(expiresDate.getDate() + 365);
+                Cookies.set("lastQueryUID", searchUID, { expires: expiresDate });
             }
         }
         catch (error) {
